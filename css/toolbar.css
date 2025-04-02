@@ -1,4 +1,3 @@
-/* Main Toolbar */
 .toolbar {
   width: 70px;
   background-color: var(--panel-color);
@@ -41,7 +40,6 @@
   border-color: var(--primary-color);
 }
 
-/* Mobile Toolbar */
 #mobileToolbar {
   display: none;
   position: fixed;

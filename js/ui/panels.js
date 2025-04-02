@@ -1,9 +1,15 @@
-// Panels.js - Manages panel interactions and layer controls
-
 class PanelManager {
   constructor(uiManager, layerManager) {
     this.uiManager = uiManager;
     this.layerManager = layerManager;
+
+    this.panels = {
+      brush: document.getElementById("brushPanel"),
+      eraser: document.getElementById("eraserPanel"),
+      fill: document.getElementById("fillPanel"),
+      layers: document.getElementById("layersPanel"),
+      settings: document.getElementById("settingsPanel"),
+    };
 
     this.initLayerControls();
   }
@@ -18,17 +24,17 @@ class PanelManager {
         this.layerManager.addLayer();
         this.uiManager.updateLayersList(
           this.layerManager.getLayers(),
-          this.layerManager.getActiveLayerIndex()
+          this.layerManager.getCurrentLayerIndex() // Changed from getActiveLayerIndex
         );
       });
     }
 
     if (duplicateLayerBtn) {
       duplicateLayerBtn.addEventListener("click", () => {
-        this.layerManager.duplicateActiveLayer();
+        this.layerManager.duplicateCurrentLayer(); // Changed from duplicateActiveLayer
         this.uiManager.updateLayersList(
           this.layerManager.getLayers(),
-          this.layerManager.getActiveLayerIndex()
+          this.layerManager.getCurrentLayerIndex() // Changed from getActiveLayerIndex
         );
       });
     }
@@ -37,16 +43,28 @@ class PanelManager {
       deleteLayerBtn.addEventListener("click", () => {
         if (this.layerManager.getLayers().length > 1) {
           if (confirm("Are you sure you want to delete this layer?")) {
-            this.layerManager.deleteActiveLayer();
+            this.layerManager.deleteCurrentLayer(); // Changed from deleteActiveLayer
             this.uiManager.updateLayersList(
               this.layerManager.getLayers(),
-              this.layerManager.getActiveLayerIndex()
+              this.layerManager.getCurrentLayerIndex() // Changed from getActiveLayerIndex
             );
           }
         } else {
           alert("Cannot delete the last layer");
         }
       });
+    }
+  }
+
+  showPanel(panelId) {
+    Object.values(this.panels).forEach((panel) => {
+      if (panel) {
+        panel.style.display = "none";
+      }
+    });
+
+    if (this.panels[panelId]) {
+      this.panels[panelId].style.display = "block";
     }
   }
 }

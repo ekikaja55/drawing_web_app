@@ -5,7 +5,6 @@ class CanvasActions {
   }
 
   setupEventListeners() {
-    // Canvas size options
     const sizeOptions = document.querySelectorAll(".canvas-size-option");
     sizeOptions.forEach((option) => {
       option.addEventListener("click", () => {
@@ -18,7 +17,6 @@ class CanvasActions {
       });
     });
 
-    // Custom size inputs
     const applyCustomSizeBtn = document.getElementById("applyCustomSize");
     applyCustomSizeBtn.addEventListener("click", () => {
       const customWidth = document.getElementById("customWidth");
@@ -30,14 +28,12 @@ class CanvasActions {
       if (width >= 50 && width <= 4000 && height >= 50 && height <= 4000) {
         this.canvasManager.resizeCanvas(width, height);
 
-        // Reset active class on preset size options
         document.querySelectorAll(".canvas-size-option").forEach((opt) => {
           opt.classList.remove("active");
         });
       }
     });
 
-    // Clear and reset buttons
     const clearCanvasBtn = document.getElementById("clearCanvasBtn");
     clearCanvasBtn.addEventListener("click", () => {
       if (confirm("Clear the current layer? This action cannot be undone.")) {
@@ -54,7 +50,6 @@ class CanvasActions {
       }
     });
 
-    // Download modal
     const downloadBtn = document.getElementById("downloadBtn");
     const downloadModal = document.getElementById("downloadModal");
     const closeDownloadModal = document.getElementById("closeDownloadModal");
@@ -86,7 +81,6 @@ class CanvasActions {
 
       const dataURL = this.canvasManager.getCanvasAsDataURL(format, quality);
 
-      // Create temporary link and trigger download
       const link = document.createElement("a");
       link.download = `drawing.${format}`;
       link.href = dataURL;
@@ -95,7 +89,6 @@ class CanvasActions {
       downloadModal.style.display = "none";
     });
 
-    // Close modal when clicking outside
     window.addEventListener("click", (e) => {
       if (e.target === downloadModal) {
         downloadModal.style.display = "none";
@@ -104,5 +97,4 @@ class CanvasActions {
   }
 }
 
-// Export for use in other modules
 window.CanvasActions = CanvasActions;

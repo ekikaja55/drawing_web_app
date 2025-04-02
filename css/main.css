@@ -84,7 +84,6 @@ button:hover {
   background-color: var(--secondary-color);
 }
 
-/* Modal Base Styles */
 .modal {
   display: none;
   position: fixed;

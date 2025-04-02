@@ -1,5 +1,3 @@
-// UI Manager - Handles UI interactions and updates
-
 class UIManager {
   constructor(canvasManager, toolManager) {
     this.canvasManager = canvasManager;
@@ -21,22 +19,17 @@ class UIManager {
   }
 
   initToolbarButtons() {
-    // Tool buttons
     const toolButtons = document.querySelectorAll(".tool-btn");
     toolButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        // Remove active class from all buttons
         toolButtons.forEach((b) => b.classList.remove("active"));
 
-        // Add active class to clicked button
         btn.classList.add("active");
 
-        // Hide all panels
         Object.values(this.panels).forEach((panel) => {
           if (panel) panel.style.display = "none";
         });
 
-        // Determine which tool was selected and show the appropriate panel
         if (btn.id === "brushTool") {
           this.activePanel = "brush";
           this.toolManager.setActiveTool("brush");
@@ -48,7 +41,7 @@ class UIManager {
         } else if (btn.id === "fillTool") {
           this.activePanel = "fill";
           this.toolManager.setActiveTool("fill");
-          // Fill tool might use brush panel settings
+
           if (this.panels.brush) this.panels.brush.style.display = "block";
         } else if (btn.id === "layersTool") {
           this.activePanel = "layers";
@@ -66,43 +59,36 @@ class UIManager {
     const hexInput = document.getElementById("hexInput");
 
     if (colorWheel && hexInput && this.toolManager) {
-      // Update hex input when color wheel changes
       colorWheel.addEventListener("input", (e) => {
         const color = e.target.value;
         hexInput.value = color;
-        // Check if setColor exists, if not use a different approach
+
         if (typeof this.toolManager.setColor === "function") {
           this.toolManager.setColor(color);
         } else if (typeof this.toolManager.setBrushColor === "function") {
-          // Alternative method name that might exist
           this.toolManager.setBrushColor(color);
         } else {
-          // Fallback: Store color in toolManager directly
           this.toolManager.currentColor = color;
           console.log("Using fallback color storage:", color);
         }
       });
 
-      // Update color wheel when hex input changes
       hexInput.addEventListener("input", (e) => {
         const color = e.target.value;
         if (/^#[0-9A-F]{6}$/i.test(color)) {
           colorWheel.value = color;
-          // Check if setColor exists, if not use a different approach
+
           if (typeof this.toolManager.setColor === "function") {
             this.toolManager.setColor(color);
           } else if (typeof this.toolManager.setBrushColor === "function") {
-            // Alternative method name that might exist
             this.toolManager.setBrushColor(color);
           } else {
-            // Fallback: Store color in toolManager directly
             this.toolManager.currentColor = color;
             console.log("Using fallback color storage:", color);
           }
         }
       });
 
-      // Initial color setting - with safeguard
       try {
         if (typeof this.toolManager.setColor === "function") {
           this.toolManager.setColor(colorWheel.value);
@@ -136,7 +122,6 @@ class UIManager {
         }
       });
 
-      // Set initial brush size
       if (typeof this.toolManager.setSize === "function") {
         try {
           this.toolManager.setSize("brush", parseInt(brushSize.value));
@@ -155,17 +140,18 @@ class UIManager {
         }
       });
 
-      // Set initial brush opacity
       if (typeof this.toolManager.setOpacity === "function") {
         try {
-          this.toolManager.setOpacity("brush", parseInt(brushOpacity.value) / 100);
+          this.toolManager.setOpacity(
+            "brush",
+            parseInt(brushOpacity.value) / 100
+          );
         } catch (err) {
           console.warn("Failed to set initial brush opacity:", err);
         }
       }
     }
 
-    // Brush type selection
     if (brushPreviews && this.toolManager) {
       brushPreviews.forEach((preview) => {
         preview.addEventListener("click", () => {
@@ -178,7 +164,6 @@ class UIManager {
       });
     }
 
-    // Custom brush upload
     if (customBrushBtn && brushFileInput && this.toolManager) {
       customBrushBtn.addEventListener("click", () => {
         brushFileInput.click();
@@ -193,7 +178,7 @@ class UIManager {
               if (typeof this.toolManager.setCustomBrush === "function") {
                 this.toolManager.setCustomBrush(img);
               }
-              // Visual feedback for selection
+
               brushPreviews.forEach((p) => p.classList.remove("active"));
               customBrushBtn.classList.add("active");
             };
@@ -220,7 +205,6 @@ class UIManager {
         }
       });
 
-      // Set initial eraser size
       if (typeof this.toolManager.setSize === "function") {
         try {
           this.toolManager.setSize("eraser", parseInt(eraserSize.value));
@@ -239,7 +223,6 @@ class UIManager {
         }
       });
 
-      // Set initial eraser opacity
       if (typeof this.toolManager.setOpacity === "function") {
         try {
           this.toolManager.setOpacity(
@@ -261,7 +244,6 @@ class UIManager {
     const clearCanvasBtn = document.getElementById("clearCanvasBtn");
     const resetCanvasBtn = document.getElementById("resetCanvasBtn");
 
-    // Canvas size presets
     if (canvasSizeOptions && this.canvasManager) {
       canvasSizeOptions.forEach((option) => {
         option.addEventListener("click", () => {
@@ -277,7 +259,6 @@ class UIManager {
       });
     }
 
-    // Custom canvas size
     if (applyCustomSize && customWidth && customHeight && this.canvasManager) {
       applyCustomSize.addEventListener("click", () => {
         const width = parseInt(customWidth.value);
@@ -294,7 +275,6 @@ class UIManager {
       });
     }
 
-    // Clear canvas
     if (clearCanvasBtn && this.canvasManager) {
       clearCanvasBtn.addEventListener("click", () => {
         if (confirm("Are you sure you want to clear the canvas?")) {
@@ -305,7 +285,6 @@ class UIManager {
       });
     }
 
-    // Reset all
     if (resetCanvasBtn && this.canvasManager) {
       resetCanvasBtn.addEventListener("click", () => {
         if (
@@ -325,10 +304,8 @@ class UIManager {
     const layersList = document.getElementById("layersList");
     if (!layersList) return;
 
-    // Clear existing layers
     layersList.innerHTML = "";
 
-    // Add each layer to the list
     layers.forEach((layer, index) => {
       const layerItem = document.createElement("div");
       layerItem.className = "layer-item";
@@ -336,17 +313,13 @@ class UIManager {
         layerItem.classList.add("active");
       }
 
-      // Layer preview (thumbnail)
       const layerPreview = document.createElement("div");
       layerPreview.className = "layer-preview";
-      // Add mini preview of layer content if possible
 
-      // Layer name
       const layerName = document.createElement("div");
       layerName.className = "layer-name";
       layerName.textContent = layer.name || `Layer ${index + 1}`;
 
-      // Visibility toggle button
       const visibilityBtn = document.createElement("button");
       visibilityBtn.className = "layer-visibility";
       visibilityBtn.title = "Toggle Visibility";
@@ -369,7 +342,6 @@ class UIManager {
           `;
       }
 
-      // Add event listeners
       layerItem.addEventListener("click", () => {
         document.querySelectorAll(".layer-item").forEach((item) => {
           item.classList.remove("active");
@@ -381,13 +353,12 @@ class UIManager {
       });
 
       visibilityBtn.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent layer selection
+        e.stopPropagation();
         if (typeof this.toolManager.toggleLayerVisibility === "function") {
           this.toolManager.toggleLayerVisibility(index);
         }
       });
 
-      // Assemble layer item
       layerItem.appendChild(layerPreview);
       layerItem.appendChild(layerName);
       layerItem.appendChild(visibilityBtn);

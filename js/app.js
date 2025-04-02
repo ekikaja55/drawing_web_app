@@ -1,27 +1,18 @@
-// app.js - Initializes the DrawAnywhere app
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize the canvas manager
   const canvasManager = new CanvasManager();
 
-  // Initialize the tool manager FIRST
   const toolManager = new ToolManager(canvasManager);
 
-  // THEN initialize the UI manager with required parameters
   const uiManager = new UIManager(canvasManager, toolManager);
 
-  // Initialize the layer manager
   const layerManager = new LayerManager(canvasManager);
-  // Initialize panels manager
-  const panelsManager = new PanelManager();
 
-  // Initialize modals
+  const panelsManager = new PanelManager(uiManager, layerManager);
+
   const modalsManager = new ModalManager();
 
-  // Initialize canvas actions
   const canvasActions = new CanvasActions(canvasManager, layerManager);
 
-  // Create and register tools
   const brushTool = new BrushTool(canvasManager);
   toolManager.registerTool("brush", brushTool);
 
@@ -31,20 +22,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const fillTool = new FillTool(canvasManager);
   toolManager.registerTool("fill", fillTool);
 
-  // Set brush as the default active tool
   toolManager.setActiveTool("brush");
 
-  // Initialize mobile UI handler
-  const mobileUI = new MobileUI(panelsManager);
+  const mobileUI = new MobileUI(uiManager);
 
-  // Setup tool selection events
   document.querySelectorAll(".tool-btn").forEach((button) => {
     button.addEventListener("click", () => {
       const toolId = button.id.replace("Tool", "").toLowerCase();
       toolManager.setActiveTool(toolId);
       panelsManager.showPanel(toolId);
 
-      // Update UI active states
       document
         .querySelectorAll(".tool-btn")
         .forEach((btn) => btn.classList.remove("active"));
@@ -52,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Handle brush settings
   document.getElementById("colorWheel").addEventListener("input", (e) => {
     brushTool.setColor(e.target.value);
     document.getElementById("hexInput").value = e.target.value;
@@ -73,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("brushOpacityValue").textContent = e.target.value;
   });
 
-  // Handle eraser settings
   document.getElementById("eraserSize").addEventListener("input", (e) => {
     eraserTool.setSize(parseInt(e.target.value));
     document.getElementById("eraserSizeValue").textContent = e.target.value;
@@ -84,13 +69,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("eraserOpacityValue").textContent = e.target.value;
   });
 
-  // Handle brush type selection
+  if (document.getElementById("eraserHardness")) {
+    document.getElementById("eraserHardness").addEventListener("input", (e) => {
+      if (eraserTool.hardness !== undefined) {
+        eraserTool.hardness = parseInt(e.target.value);
+        document.getElementById("eraserHardnessValue").textContent =
+          e.target.value;
+      }
+    });
+  }
+
   document.querySelectorAll(".brush-preview").forEach((brushPreview) => {
     brushPreview.addEventListener("click", () => {
       const brushType = brushPreview.dataset.brush;
       brushTool.setBrushType(brushType);
 
-      // Update UI active states
       document.querySelectorAll(".brush-preview").forEach((preview) => {
         preview.classList.remove("active");
       });
@@ -98,7 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Handle custom brush upload
   document.getElementById("customBrushBtn").addEventListener("click", () => {
     document.getElementById("brushFileInput").click();
   });
@@ -117,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Layer management
   document.getElementById("addLayerBtn").addEventListener("click", () => {
     layerManager.addLayer();
     updateLayersList();
@@ -133,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLayersList();
   });
 
-  // Canvas settings
   document.querySelectorAll(".canvas-size-option").forEach((option) => {
     option.addEventListener("click", () => {
       const width = parseInt(option.dataset.width);
@@ -141,7 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       canvasManager.resizeCanvas(width, height);
 
-      // Update UI active states
       document.querySelectorAll(".canvas-size-option").forEach((opt) => {
         opt.classList.remove("active");
       });
@@ -156,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (width >= 50 && width <= 4000 && height >= 50 && height <= 4000) {
       canvasManager.resizeCanvas(width, height);
 
-      // Update UI active states
       document.querySelectorAll(".canvas-size-option").forEach((opt) => {
         opt.classList.remove("active");
       });
@@ -170,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("resetCanvasBtn").addEventListener("click", () => {
     canvasActions.resetCanvas();
 
-    // Reset UI to defaults
     document.getElementById("brushSize").value = 10;
     document.getElementById("brushSizeValue").textContent = 10;
     document.getElementById("brushOpacity").value = 100;
@@ -181,7 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
     toolManager.setActiveTool("brush");
     panelsManager.showPanel("brush");
 
-    // Reset active states
     document.querySelectorAll(".tool-btn").forEach((btn) => {
       btn.classList.remove("active");
     });
@@ -190,7 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLayersList();
   });
 
-  // Download functionality
   document.getElementById("downloadBtn").addEventListener("click", () => {
     modalsManager.openModal("downloadModal");
   });
@@ -224,12 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("qualityValue").textContent = `${value}%`;
   });
 
-  // Mobile panel close button
   document.getElementById("mobilePanelClose").addEventListener("click", () => {
     document.getElementById("mobilePanel").style.display = "none";
   });
 
-  // Mobile toolbar buttons
   document.querySelectorAll(".mobile-tool-btn").forEach((button) => {
     button.addEventListener("click", () => {
       const toolId = button.dataset.tool;
@@ -243,7 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Helper function to update layers list UI
   function updateLayersList() {
     const layers = layerManager.getLayers();
     const layersList = document.getElementById("layersList");
@@ -303,17 +285,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initial update of layers list
   updateLayersList();
 
-  // Handle window resizing
   window.addEventListener("resize", () => {
     canvasManager.updateCanvasSize();
   });
 
-  // Initialize the canvas with default size
   canvasManager.initializeCanvas(800, 600);
 
-  // Log ready message
   console.log("DrawAnywhere initialization complete");
 });

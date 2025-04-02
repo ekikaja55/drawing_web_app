@@ -1,4 +1,3 @@
-/* Right Panel Styles */
 .right-panel {
   width: 280px;
   background-color: var(--panel-color);
@@ -20,7 +19,6 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Mobile Panel */
 #mobilePanel {
   display: none;
   position: fixed;
@@ -57,14 +55,12 @@
   padding-top: 40px;
 }
 
-/* Panel Content Styles */
 #layersList {
   max-height: 200px;
   overflow-y: auto;
   margin-bottom: 10px;
 }
 
-/* Download Panel */
 #downloadModal .modal-content {
   width: 400px;
   max-width: 90%;
@@ -74,7 +70,6 @@
   flex: 1;
 }
 
-/* Reset Canvas Confirmation */
 #resetConfirmModal .modal-body {
   text-align: center;
   padding: 20px 0;

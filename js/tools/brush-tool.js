@@ -3,18 +3,15 @@ class BrushTool {
     this.canvasManager = canvasManager;
     this.canvas = canvasManager.canvas;
 
-    // Brush settings
     this.color = "#000000";
     this.size = 10;
     this.opacity = 1.0;
     this.type = "round";
     this.customBrush = null;
 
-    // Drawing state
     this.isDrawing = false;
     this.lastPoint = null;
 
-    // UI elements
     this.colorWheel = document.getElementById("colorWheel");
     this.hexInput = document.getElementById("hexInput");
     this.brushSize = document.getElementById("brushSize");
@@ -28,6 +25,28 @@ class BrushTool {
     this.setupEventListeners();
   }
 
+  setColor(color) {
+    this.color = color;
+  }
+
+  setSize(size) {
+    this.size = size;
+  }
+
+  setOpacity(opacity) {
+    this.opacity = opacity;
+  }
+
+  setBrushType(type) {
+    this.type = type;
+    this.customBrush = null;
+  }
+
+  setCustomBrush(img) {
+    this.customBrush = img;
+    this.type = "custom";
+  }
+
   activate() {
     this.setupCanvasListeners();
   }
@@ -37,14 +56,12 @@ class BrushTool {
   }
 
   setupEventListeners() {
-    // Color picker
     this.colorWheel.addEventListener("input", () => {
       this.color = this.colorWheel.value;
       this.hexInput.value = this.color;
     });
 
     this.hexInput.addEventListener("change", () => {
-      // Validate hex color
       const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
       if (hexRegex.test(this.hexInput.value)) {
         this.color = this.hexInput.value;
@@ -54,19 +71,16 @@ class BrushTool {
       }
     });
 
-    // Size slider
     this.brushSize.addEventListener("input", () => {
       this.size = parseInt(this.brushSize.value);
       this.brushSizeValue.textContent = this.size;
     });
 
-    // Opacity slider
     this.brushOpacity.addEventListener("input", () => {
       this.opacity = parseInt(this.brushOpacity.value) / 100;
       this.brushOpacityValue.textContent = this.brushOpacity.value;
     });
 
-    // Brush type selection
     this.brushPreviews.forEach((preview) => {
       preview.addEventListener("click", () => {
         this.brushPreviews.forEach((p) => p.classList.remove("active"));
@@ -76,7 +90,6 @@ class BrushTool {
       });
     });
 
-    // Custom brush
     this.customBrushBtn.addEventListener("click", () => {
       this.brushFileInput.click();
     });
@@ -94,7 +107,6 @@ class BrushTool {
               this.customBrush = img;
               this.type = "custom";
 
-              // Mark custom brush as active
               this.brushPreviews.forEach((p) => p.classList.remove("active"));
               this.customBrushBtn.classList.add("active");
             };
@@ -112,7 +124,6 @@ class BrushTool {
     this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
     window.addEventListener("mouseup", this.handleMouseUp.bind(this));
 
-    // Touch events for mobile
     this.canvas.addEventListener(
       "touchstart",
       this.handleTouchStart.bind(this)
@@ -162,12 +173,11 @@ class BrushTool {
     this.isDrawing = false;
     this.lastPoint = null;
 
-    // Redraw main canvas to reflect changes
     this.canvasManager.redrawCanvas();
   }
 
   handleTouchStart(e) {
-    e.preventDefault(); // Prevent scrolling
+    e.preventDefault();
     if (e.touches.length > 0) {
       this.isDrawing = true;
       const point = this.getCanvasPointFromTouch(e.touches[0]);
@@ -177,7 +187,7 @@ class BrushTool {
   }
 
   handleTouchMove(e) {
-    e.preventDefault(); // Prevent scrolling
+    e.preventDefault();
     if (!this.isDrawing || e.touches.length === 0) return;
 
     const point = this.getCanvasPointFromTouch(e.touches[0]);
@@ -186,11 +196,10 @@ class BrushTool {
   }
 
   handleTouchEnd(e) {
-    e.preventDefault(); // Prevent scrolling
+    e.preventDefault();
     this.isDrawing = false;
     this.lastPoint = null;
 
-    // Redraw main canvas to reflect changes
     this.canvasManager.redrawCanvas();
   }
 
@@ -224,7 +233,6 @@ class BrushTool {
     ctx.globalAlpha = this.opacity;
 
     if (this.type === "custom" && this.customBrush) {
-      // Draw custom brush
       const halfSize = this.size / 2;
       ctx.drawImage(
         this.customBrush,
@@ -243,7 +251,6 @@ class BrushTool {
         const halfSize = this.size / 2;
         ctx.rect(point.x - halfSize, point.y - halfSize, this.size, this.size);
       } else if (this.type === "texture") {
-        // Simple texture pattern
         for (let i = 0; i < 8; i++) {
           const angle = Math.random() * Math.PI * 2;
           const distance = Math.random() * (this.size / 2);
@@ -259,7 +266,6 @@ class BrushTool {
 
       ctx.fill();
 
-      // Apply soft brush effect if needed
       if (this.type === "soft") {
         const gradient = ctx.createRadialGradient(
           point.x,
@@ -277,7 +283,6 @@ class BrushTool {
       }
     }
 
-    // Update the main canvas
     this.canvasManager.redrawCanvas();
   }
 
@@ -289,7 +294,6 @@ class BrushTool {
     ctx.globalAlpha = this.opacity;
 
     if (this.type === "custom" && this.customBrush) {
-      // For custom brush, draw dots along the path
       const distance = Math.sqrt(
         Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2)
       );
@@ -317,7 +321,6 @@ class BrushTool {
       ctx.lineJoin = "round";
 
       if (this.type === "texture") {
-        // For texture brush, draw random dots along the path
         const distance = Math.sqrt(
           Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2)
         );
@@ -342,7 +345,6 @@ class BrushTool {
           }
         }
       } else if (this.type === "soft") {
-        // For soft brush, we'll use multiple semi-transparent strokes
         const blur = 2;
         for (let i = 0; i < blur; i++) {
           ctx.globalAlpha = (this.opacity / (i + 1)) * 0.5;
@@ -353,7 +355,6 @@ class BrushTool {
         }
         ctx.globalAlpha = this.opacity;
       } else {
-        // Regular stroke for round and square brushes
         ctx.beginPath();
         ctx.moveTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
@@ -361,7 +362,8 @@ class BrushTool {
       }
     }
 
-    // Update the main canvas
     this.canvasManager.redrawCanvas();
   }
 }
+
+window.BrushTool = BrushTool;

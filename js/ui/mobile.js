@@ -1,5 +1,3 @@
-// Mobile.js - Handles mobile-specific UI functionality
-
 class MobileUI {
   constructor(uiManager) {
     this.uiManager = uiManager;
@@ -16,17 +14,13 @@ class MobileUI {
 
     mobileToolButtons.forEach((btn) => {
       btn.addEventListener("click", () => {
-        // Remove active class from all buttons
         mobileToolButtons.forEach((b) => b.classList.remove("active"));
 
-        // Add active class to clicked button
         btn.classList.add("active");
 
         const tool = btn.dataset.tool;
 
-        // Activate corresponding tool
         if (tool === "brush" || tool === "eraser" || tool === "fill") {
-          // Set the active tool in toolManager
           if (
             this.uiManager.toolManager &&
             typeof this.uiManager.toolManager.setActiveTool === "function"
@@ -35,11 +29,9 @@ class MobileUI {
           }
         }
 
-        // Show panel for settings if it's layers or settings
         if (tool === "layers" || tool === "settings") {
           this.showMobilePanel(tool);
         } else {
-          // For tools, show their settings
           this.showMobilePanel(tool);
         }
       });
@@ -48,19 +40,49 @@ class MobileUI {
 
   initMobilePanelClose() {
     if (this.mobilePanelClose && this.mobilePanel) {
+      console.log("Setting up mobile panel close button");
       this.mobilePanelClose.addEventListener("click", () => {
-        this.mobilePanel.style.display = "none";
+        console.log("Close button clicked");
+        this.mobilePanel.style.cssText += "display: none !important;";
+        console.log("Panel hidden:", this.mobilePanel.style.display);
       });
+    } else {
+      console.error("Mobile panel close button or mobile panel not found");
     }
   }
 
-  showMobilePanel(panelType) {
-    if (!this.mobilePanel || !this.mobilePanelContent) return;
+  // Add this missing method to fix the error
+  updateMobileToolbar(toolId) {
+    const mobileToolButtons = document.querySelectorAll(".mobile-tool-btn");
 
-    // Clear previous content
+    mobileToolButtons.forEach((btn) => {
+      btn.classList.remove("active");
+      if (btn.dataset.tool === toolId) {
+        btn.classList.add("active");
+      }
+    });
+
+    // Show the appropriate panel based on the selected tool
+    this.showMobilePanel(toolId);
+  }
+
+  showMobilePanel(panelType) {
+    console.log("Showing mobile panel:", panelType);
+    if (!this.mobilePanel || !this.mobilePanelContent) {
+      console.error("mobilePanel or mobilePanelContent not found");
+      return;
+    }
+
+    console.log("Mobile panel CSS before:", {
+      display: this.mobilePanel.style.display,
+      position: getComputedStyle(this.mobilePanel).position,
+      zIndex: getComputedStyle(this.mobilePanel).zIndex,
+      opacity: getComputedStyle(this.mobilePanel).opacity,
+      visibility: getComputedStyle(this.mobilePanel).visibility,
+    });
+
     this.mobilePanelContent.innerHTML = "";
 
-    // Clone the appropriate panel into the mobile panel
     let panelToClone;
 
     switch (panelType) {
@@ -77,28 +99,41 @@ class MobileUI {
         panelToClone = document.getElementById("canvasPanel");
         break;
       case "fill":
-        // Fill might use brush settings or have its own
         panelToClone = document.getElementById("brushPanel");
         break;
     }
 
     if (panelToClone) {
+      console.log("Found panel to clone:", panelType);
       const clonedContent = panelToClone.cloneNode(true);
-      // Make sure it's displayed
       clonedContent.style.display = "block";
-
-      // We need to re-add event listeners to the cloned content
+      this.mobilePanel.classList.add("visible");
       this.mobilePanelContent.appendChild(clonedContent);
-
-      // Re-initialize controls in mobile panel based on panel type
       this.reinitializeControls(panelType, clonedContent);
-
-      // Show the panel
-      this.mobilePanel.style.display = "block";
+      // this.mobilePanel.style.display = "block";
+    } else {
+      console.error(`Panel "${panelType}" not found in DOM`);
     }
+
+    console.log("Mobile panel CSS after:", {
+      display: this.mobilePanel.style.display,
+      position: getComputedStyle(this.mobilePanel).position,
+      zIndex: getComputedStyle(this.mobilePanel).zIndex,
+      opacity: getComputedStyle(this.mobilePanel).opacity,
+      visibility: getComputedStyle(this.mobilePanel).visibility,
+    });
+
+    // Tambahkan debugging untuk memeriksa apakah perubahan diterapkan
+    console.log(
+      "Mobile panel style after forcing:",
+      this.mobilePanel.style.cssText
+    );
+    console.log(
+      "Computed style:",
+      window.getComputedStyle(this.mobilePanel).display
+    );
   }
 
-  // New method to handle re-initializing controls in the mobile panel
   reinitializeControls(panelType, contentElement) {
     switch (panelType) {
       case "brush":
@@ -108,16 +143,17 @@ class MobileUI {
         this.reinitEraserControls(contentElement);
         break;
       case "layers":
-        // If layer controls need re-initialization
         break;
       case "settings":
         this.reinitCanvasControls(contentElement);
+        break;
+      case "fill":
+        this.reinitBrushControls(contentElement);
         break;
     }
   }
 
   reinitBrushControls(panel) {
-    // Re-initialize brush size control
     const brushSize =
       panel.querySelector("#brushSize") || panel.querySelector(".brush-size");
     const brushSizeValue =
@@ -134,7 +170,6 @@ class MobileUI {
       });
     }
 
-    // Re-initialize brush opacity control
     const brushOpacity =
       panel.querySelector("#brushOpacity") ||
       panel.querySelector(".brush-opacity");
@@ -155,7 +190,6 @@ class MobileUI {
       });
     }
 
-    // Re-initialize brush type selection
     const brushPreviews = panel.querySelectorAll(".brush-preview");
 
     if (brushPreviews && this.uiManager.toolManager) {
@@ -172,7 +206,6 @@ class MobileUI {
   }
 
   reinitEraserControls(panel) {
-    // Similar to brush controls but for eraser
     const eraserSize =
       panel.querySelector("#eraserSize") || panel.querySelector(".eraser-size");
     const eraserSizeValue =
@@ -189,7 +222,6 @@ class MobileUI {
       });
     }
 
-    // Re-initialize eraser opacity control
     const eraserOpacity =
       panel.querySelector("#eraserOpacity") ||
       panel.querySelector(".eraser-opacity");
@@ -212,7 +244,6 @@ class MobileUI {
   }
 
   reinitCanvasControls(panel) {
-    // Canvas size presets
     const canvasSizeOptions = panel.querySelectorAll(".canvas-size-option");
 
     if (canvasSizeOptions && this.uiManager.canvasManager) {
@@ -230,7 +261,6 @@ class MobileUI {
       });
     }
 
-    // Custom canvas size
     const customWidth = panel.querySelector("#customWidth");
     const customHeight = panel.querySelector("#customHeight");
     const applyCustomSize = panel.querySelector("#applyCustomSize");
