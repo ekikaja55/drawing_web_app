@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize the layer manager
   const layerManager = new LayerManager(canvasManager);
   // Initialize panels manager
-  const panelsManager = new PanelsManager();
+  const panelsManager = new PanelManager();
 
   // Initialize modals
-  const modalsManager = new ModalsManager();
+  const modalsManager = new ModalManager();
 
   // Initialize canvas actions
   const canvasActions = new CanvasActions(canvasManager, layerManager);
