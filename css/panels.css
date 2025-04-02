@@ -1,0 +1,85 @@
+/* Right Panel Styles */
+.right-panel {
+  width: 280px;
+  background-color: var(--panel-color);
+  border-left: 1px solid var(--border-color);
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.panel-section {
+  margin-bottom: 25px;
+}
+
+.panel-section h3 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-color);
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Mobile Panel */
+#mobilePanel {
+  display: none;
+  position: fixed;
+  bottom: 60px;
+  left: 0;
+  width: 100%;
+  background-color: var(--panel-color);
+  border-top: 1px solid var(--border-color);
+  z-index: 999;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+#mobilePanel.visible {
+  transform: translateY(0);
+}
+
+#mobilePanelClose {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-color);
+  cursor: pointer;
+  z-index: 2;
+}
+
+#mobilePanelContent {
+  padding: 15px;
+  padding-top: 40px;
+}
+
+/* Panel Content Styles */
+#layersList {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+/* Download Panel */
+#downloadModal .modal-content {
+  width: 400px;
+  max-width: 90%;
+}
+
+#downloadQuality {
+  flex: 1;
+}
+
+/* Reset Canvas Confirmation */
+#resetConfirmModal .modal-body {
+  text-align: center;
+  padding: 20px 0;
+}
+
+#resetConfirmModal .modal-footer {
+  justify-content: center;
+}

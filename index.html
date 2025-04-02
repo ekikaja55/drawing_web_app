@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DrawAnywhere - Interactive Drawing App</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/toolbar.css" />
+    <link rel="stylesheet" href="css/panels.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+          <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+          <path d="M2 2l7.586 7.586"></path>
+          <circle cx="11" cy="11" r="2"></circle>
+        </svg>
+        DrawAnywhere
+      </div>
+      <button id="downloadBtn">Download</button>
+    </header>
+
+    <div class="main-container">
+      <div class="toolbar">
+        <button class="tool-btn active" id="brushTool" title="Brush">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+          </svg>
+        </button>
+        <button class="tool-btn" id="eraserTool" title="Eraser">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M20 20H9L4 15C2.9 13.9 2.9 12.1 4 11L13 2C14.1 0.9 15.9 0.9 17 2L22 7C23.1 8.1 23.1 9.9 22 11L13 20"
+            ></path>
+          </svg>
+        </button>
+        <button class="tool-btn" id="fillTool" title="Fill Tool">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M19 11h2v2h-2v-2zM3 5v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5a2 2 0 0 0-2 2z"
+            ></path>
+            <path d="M12 9a3 3 0 1 0 0 6 3 3 0 1 0 0-6z"></path>
+          </svg>
+        </button>
+        <div
+          style="
+            border-bottom: 1px solid var(--border-color);
+            width: 50px;
+            margin: 10px 0;
+          "
+        ></div>
+        <button class="tool-btn" id="layersTool" title="Layers">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </button>
+        <button class="tool-btn" id="settingsTool" title="Canvas Settings">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="canvas-container">
+        <div class="canvas-wrapper">
+          <canvas id="drawingCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="panel-section" id="brushPanel">
+          <h3>Brush Settings</h3>
+          <div class="control-group">
+            <label>Color</label>
+            <div class="color-picker">
+              <div class="color-wheel">
+                <input type="color" id="colorWheel" value="#000000" />
+              </div>
+              <input type="text" id="hexInput" value="#000000" />
+            </div>
+          </div>
+          <div class="control-group">
+            <label
+              >Size:
+              <span class="range-value" id="brushSizeValue">10</span>px</label
+            >
+            <div class="range-control">
+              <input type="range" id="brushSize" min="1" max="100" value="10" />
+            </div>
+          </div>
+          <div class="control-group">
+            <label
+              >Opacity:
+              <span class="range-value" id="brushOpacityValue">100</span
+              >%</label
+            >
+            <div class="range-control">
+              <input
+                type="range"
+                id="brushOpacity"
+                min="1"
+                max="100"
+                value="100"
+              />
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Brush Type</label>
+            <div class="brush-previews">
+              <div class="brush-preview active" data-brush="round">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+              </div>
+              <div class="brush-preview" data-brush="square">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                >
+                  <rect x="2" y="2" width="20" height="20"></rect>
+                </svg>
+              </div>
+              <div class="brush-preview" data-brush="soft">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  opacity="0.7"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                </svg>
+              </div>
+              <div class="brush-preview" data-brush="texture">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"
+                  ></path>
+                </svg>
+              </div>
+              <button class="custom-brush-btn" id="customBrushBtn">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <input type="file" id="brushFileInput" accept="image/*" />
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section" id="eraserPanel" style="display: none">
+          <h3>Eraser Settings</h3>
+          <div class="control-group">
+            <label
+              >Size:
+              <span class="range-value" id="eraserSizeValue">20</span>px</label
+            >
+            <div class="range-control">
+              <input
+                type="range"
+                id="eraserSize"
+                min="1"
+                max="100"
+                value="20"
+              />
+            </div>
+          </div>
+          <div class="control-group">
+            <label
+              >Opacity:
+              <span class="range-value" id="eraserOpacityValue">100</span
+              >%</label
+            >
+            <div class="range-control">
+              <input
+                type="range"
+                id="eraserOpacity"
+                min="1"
+                max="100"
+                value="100"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section" id="layersPanel" style="display: none">
+          <h3>Layers</h3>
+          <div id="layersList">
+            <div class="layer-item">
+              <div class="layer-preview"></div>
+              <div class="layer-name">Layer 1</div>
+              <button class="layer-visibility" title="Toggle Visibility">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <button id="addLayerBtn" style="margin-top: 10px; width: 100%">
+            Add Layer
+          </button>
+          <div style="display: flex; margin-top: 10px; gap: 5px">
+            <button id="duplicateLayerBtn" style="flex: 1">Duplicate</button>
+            <button id="deleteLayerBtn" style="flex: 1">Delete</button>
+          </div>
+        </div>
+
+        <div class="panel-section" id="canvasPanel" style="display: none">
+          <h3>Canvas Settings</h3>
+          <div class="control-group">
+            <label>Canvas Size</label>
+            <div class="canvas-size-options">
+              <div
+                class="canvas-size-option active"
+                data-width="800"
+                data-height="600"
+              >
+                800×600
+              </div>
+              <div
+                class="canvas-size-option"
+                data-width="1024"
+                data-height="768"
+              >
+                1024×768
+              </div>
+              <div
+                class="canvas-size-option"
+                data-width="1200"
+                data-height="900"
+              >
+                1200×900
+              </div>
+            </div>
+            <div class="custom-size-inputs">
+              <input
+                type="number"
+                id="customWidth"
+                placeholder="Width"
+                min="50"
+                max="4000"
+              />
+              <input
+                type="number"
+                id="customHeight"
+                placeholder="Height"
+                min="50"
+                max="4000"
+              />
+            </div>
+            <button id="applyCustomSize" style="margin-top: 10px; width: 100%">
+              Apply Size
+            </button>
+          </div>
+          <div class="canvas-actions">
+            <button id="clearCanvasBtn">Clear Canvas</button>
+            <button id="resetCanvasBtn">Reset All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobileToolbar">
+      <div class="mobile-tools">
+        <button class="mobile-tool-btn active" data-tool="brush">
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+          </svg>
+          Brush
+        </button>
+        <button class="mobile-tool-btn" data-tool="eraser">
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M20 20H9L4 15C2.9 13.9 2.9 12.1 4 11L13 2C14.1 0.9 15.9 0.9 17 2L22 7C23.1 8.1 23.1 9.9 22 11L13 20"
+            ></path>
+          </svg>
+          Eraser
+        </button>
+        <button class="mobile-tool-btn" data-tool="fill">
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M19 11h2v2h-2v-2zM3 5v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5a2 2 0 0 0-2 2z"
+            ></path>
+            <path d="M12 9a3 3 0 1 0 0 6 3 3 0 1 0 0-6z"></path>
+          </svg>
+          Fill
+        </button>
+        <button class="mobile-tool-btn" data-tool="layers">
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          Layers
+        </button>
+        <button class="mobile-tool-btn" data-tool="settings">
+          <svg
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+            ></path>
+          </svg>
+          Settings
+        </button>
+      </div>
+    </div>
+
+    <div id="mobilePanel">
+      <button id="mobilePanelClose">×</button>
+      <div id="mobilePanelContent"></div>
+    </div>
+
+    <!-- Download Modal -->
+    <div class="modal" id="downloadModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">Download Drawing</div>
+          <button class="modal-close" id="closeDownloadModal">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="control-group">
+            <label for="downloadFormat">Format</label>
+            <select
+              id="downloadFormat"
+              style="
+                width: 100%;
+                padding: 8px;
+                margin-top: 5px;
+                border: 1px solid var(--border-color);
+                border-radius: 4px;
+              "
+            >
+              <option value="png">PNG Image</option>
+              <option value="jpeg">JPEG Image</option>
+              <option value="webp">WebP Image</option>
+            </select>
+          </div>
+          <div class="control-group" style="margin-top: 15px">
+            <label for="downloadQuality">Quality (for JPEG/WebP)</label>
+            <div class="range-control">
+              <input
+                type="range"
+                id="downloadQuality"
+                min="0.1"
+                max="1.0"
+                step="0.1"
+                value="0.8"
+              />
+              <span class="range-value" id="qualityValue">80%</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="cancelDownload">Cancel</button>
+          <button id="confirmDownload">Download</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils/color-utils.js"></script>
+    <script src="js/utils/download-utils.js"></script>
+
+    <script src="js/canvas/canvas-manager.js"></script>
+    <script src="js/canvas/layer-manager.js"></script>
+    <script src="js/canvas/canvas-actions.js"></script>
+
+    <script src="js/tools/tool-manager.js"></script>
+    <script src="js/tools/brush-tool.js"></script>
+    <script src="js/tools/eraser-tool.js"></script>
+    <script src="js/tools/fill-tool.js"></script>
+
+    <script src="js/ui/ui-manager.js"></script>
+    <script src="js/ui/panels.js"></script>
+    <script src="js/ui/modals.js"></script>
+    <script src="js/ui/mobile.js"></script>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>

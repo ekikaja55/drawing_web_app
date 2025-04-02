@@ -1,0 +1,124 @@
+/* Mobile Responsive Styles */
+@media (max-width: 992px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .toolbar {
+    display: none;
+  }
+
+  .right-panel {
+    display: none;
+  }
+
+  .canvas-container {
+    height: calc(100vh - 110px);
+  }
+
+  #mobileToolbar {
+    display: block;
+    height: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 10px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .canvas-container {
+    height: calc(100vh - 110px);
+  }
+
+  .mobile-tool-btn {
+    font-size: 10px;
+    min-width: 50px;
+  }
+
+  .mobile-tool-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 18px;
+  }
+
+  .logo svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .mobile-tools {
+    justify-content: space-around;
+  }
+
+  #mobilePanel {
+    max-height: 70vh;
+  }
+
+  .canvas-size-options {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .brush-previews {
+    justify-content: space-between;
+  }
+
+  .brush-preview,
+  .custom-brush-btn {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+  canvas {
+    cursor: default;
+  }
+
+  .tool-btn:hover {
+    background-color: transparent;
+    border-color: var(--border-color);
+  }
+
+  .tool-btn.active:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  .brush-preview:hover {
+    background-color: initial;
+    border-color: var(--border-color);
+  }
+
+  .brush-preview.active:hover {
+    background-color: rgba(74, 111, 165, 0.1);
+    border-color: var(--primary-color);
+  }
+}
+
+/* Orientation Changes */
+@media (orientation: landscape) and (max-width: 992px) {
+  #mobilePanel {
+    max-height: 50vh;
+  }
+
+  .canvas-container {
+    height: calc(100vh - 110px);
+  }
+}

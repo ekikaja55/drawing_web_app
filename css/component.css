@@ -1,0 +1,201 @@
+/* General UI Components */
+.control-group {
+  margin-bottom: 15px;
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.range-control {
+  display: flex;
+  align-items: center;
+}
+
+.range-control input[type="range"] {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.range-value {
+  font-weight: 500;
+  min-width: 30px;
+  text-align: right;
+}
+
+/* Color Picker */
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-wheel {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+}
+
+.color-wheel input[type="color"] {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+
+#hexInput {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* Brush Previews */
+.brush-previews {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.brush-preview {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: white;
+}
+
+.brush-preview.active {
+  border-color: var(--primary-color);
+  background-color: rgba(74, 111, 165, 0.1);
+}
+
+.brush-preview svg {
+  color: var(--text-color);
+}
+
+.custom-brush-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+
+#brushFileInput {
+  display: none;
+}
+
+/* Layer Items */
+.layer-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 5px;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.layer-preview {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border-color);
+  margin-right: 10px;
+  background-color: #f0f0f0;
+  background-image: linear-gradient(
+      45deg,
+      #e0e0e0 25%,
+      transparent 25%,
+      transparent 75%,
+      #e0e0e0 75%,
+      #e0e0e0
+    ),
+    linear-gradient(
+      45deg,
+      #e0e0e0 25%,
+      transparent 25%,
+      transparent 75%,
+      #e0e0e0 75%,
+      #e0e0e0
+    );
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
+}
+
+.layer-name {
+  flex: 1;
+  font-size: 14px;
+}
+
+.layer-visibility {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+}
+
+/* Canvas Size Options */
+.canvas-size-options {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.canvas-size-option {
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.canvas-size-option.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.custom-size-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.custom-size-inputs input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.canvas-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.canvas-actions button {
+  flex: 1;
+}

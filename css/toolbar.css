@@ -1,0 +1,87 @@
+/* Main Toolbar */
+.toolbar {
+  width: 70px;
+  background-color: var(--panel-color);
+  border-right: 1px solid var(--border-color);
+  padding: 15px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tool-btn {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s;
+}
+
+.tool-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.tool-btn:hover {
+  background-color: rgba(74, 111, 165, 0.1);
+  border-color: var(--primary-color);
+}
+
+.tool-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Mobile Toolbar */
+#mobileToolbar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--panel-color);
+  border-top: 1px solid var(--border-color);
+  padding: 10px;
+  z-index: 1000;
+}
+
+.mobile-tools {
+  display: flex;
+  justify-content: space-between;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.mobile-tool-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--text-color);
+  border: none;
+  font-size: 12px;
+  gap: 5px;
+  min-width: 60px;
+  padding: 8px 5px;
+}
+
+.mobile-tool-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.mobile-tool-btn.active {
+  color: var(--primary-color);
+  background-color: rgba(74, 111, 165, 0.1);
+  border-radius: 5px;
+}
