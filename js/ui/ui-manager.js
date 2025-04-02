@@ -70,7 +70,17 @@ class UIManager {
       colorWheel.addEventListener("input", (e) => {
         const color = e.target.value;
         hexInput.value = color;
-        this.toolManager.setColor(color);
+        // Check if setColor exists, if not use a different approach
+        if (typeof this.toolManager.setColor === "function") {
+          this.toolManager.setColor(color);
+        } else if (typeof this.toolManager.setBrushColor === "function") {
+          // Alternative method name that might exist
+          this.toolManager.setBrushColor(color);
+        } else {
+          // Fallback: Store color in toolManager directly
+          this.toolManager.currentColor = color;
+          console.log("Using fallback color storage:", color);
+        }
       });
 
       // Update color wheel when hex input changes
@@ -78,12 +88,33 @@ class UIManager {
         const color = e.target.value;
         if (/^#[0-9A-F]{6}$/i.test(color)) {
           colorWheel.value = color;
-          this.toolManager.setColor(color);
+          // Check if setColor exists, if not use a different approach
+          if (typeof this.toolManager.setColor === "function") {
+            this.toolManager.setColor(color);
+          } else if (typeof this.toolManager.setBrushColor === "function") {
+            // Alternative method name that might exist
+            this.toolManager.setBrushColor(color);
+          } else {
+            // Fallback: Store color in toolManager directly
+            this.toolManager.currentColor = color;
+            console.log("Using fallback color storage:", color);
+          }
         }
       });
 
-      // Initial color setting
-      this.toolManager.setColor(colorWheel.value);
+      // Initial color setting - with safeguard
+      try {
+        if (typeof this.toolManager.setColor === "function") {
+          this.toolManager.setColor(colorWheel.value);
+        } else if (typeof this.toolManager.setBrushColor === "function") {
+          this.toolManager.setBrushColor(colorWheel.value);
+        } else {
+          this.toolManager.currentColor = colorWheel.value;
+          console.log("Using fallback color storage:", colorWheel.value);
+        }
+      } catch (err) {
+        console.warn("Failed to set initial color:", err);
+      }
     }
   }
 
@@ -96,41 +127,59 @@ class UIManager {
     const customBrushBtn = document.getElementById("customBrushBtn");
     const brushFileInput = document.getElementById("brushFileInput");
 
-    if (brushSize && brushSizeValue) {
+    if (brushSize && brushSizeValue && this.toolManager) {
       brushSize.addEventListener("input", (e) => {
         const size = e.target.value;
         brushSizeValue.textContent = size;
-        this.toolManager.setSize("brush", parseInt(size));
+        if (typeof this.toolManager.setSize === "function") {
+          this.toolManager.setSize("brush", parseInt(size));
+        }
       });
 
       // Set initial brush size
-      this.toolManager.setSize("brush", parseInt(brushSize.value));
+      if (typeof this.toolManager.setSize === "function") {
+        try {
+          this.toolManager.setSize("brush", parseInt(brushSize.value));
+        } catch (err) {
+          console.warn("Failed to set initial brush size:", err);
+        }
+      }
     }
 
-    if (brushOpacity && brushOpacityValue) {
+    if (brushOpacity && brushOpacityValue && this.toolManager) {
       brushOpacity.addEventListener("input", (e) => {
         const opacity = e.target.value;
         brushOpacityValue.textContent = opacity;
-        this.toolManager.setOpacity("brush", parseInt(opacity) / 100);
+        if (typeof this.toolManager.setOpacity === "function") {
+          this.toolManager.setOpacity("brush", parseInt(opacity) / 100);
+        }
       });
 
       // Set initial brush opacity
-      this.toolManager.setOpacity("brush", parseInt(brushOpacity.value) / 100);
+      if (typeof this.toolManager.setOpacity === "function") {
+        try {
+          this.toolManager.setOpacity("brush", parseInt(brushOpacity.value) / 100);
+        } catch (err) {
+          console.warn("Failed to set initial brush opacity:", err);
+        }
+      }
     }
 
     // Brush type selection
-    if (brushPreviews) {
+    if (brushPreviews && this.toolManager) {
       brushPreviews.forEach((preview) => {
         preview.addEventListener("click", () => {
           brushPreviews.forEach((p) => p.classList.remove("active"));
           preview.classList.add("active");
-          this.toolManager.setBrushType(preview.dataset.brush);
+          if (typeof this.toolManager.setBrushType === "function") {
+            this.toolManager.setBrushType(preview.dataset.brush);
+          }
         });
       });
     }
 
     // Custom brush upload
-    if (customBrushBtn && brushFileInput) {
+    if (customBrushBtn && brushFileInput && this.toolManager) {
       customBrushBtn.addEventListener("click", () => {
         brushFileInput.click();
       });
@@ -141,7 +190,9 @@ class UIManager {
           reader.onload = (event) => {
             const img = new Image();
             img.onload = () => {
-              this.toolManager.setCustomBrush(img);
+              if (typeof this.toolManager.setCustomBrush === "function") {
+                this.toolManager.setCustomBrush(img);
+              }
               // Visual feedback for selection
               brushPreviews.forEach((p) => p.classList.remove("active"));
               customBrushBtn.classList.add("active");
@@ -160,29 +211,45 @@ class UIManager {
     const eraserOpacity = document.getElementById("eraserOpacity");
     const eraserOpacityValue = document.getElementById("eraserOpacityValue");
 
-    if (eraserSize && eraserSizeValue) {
+    if (eraserSize && eraserSizeValue && this.toolManager) {
       eraserSize.addEventListener("input", (e) => {
         const size = e.target.value;
         eraserSizeValue.textContent = size;
-        this.toolManager.setSize("eraser", parseInt(size));
+        if (typeof this.toolManager.setSize === "function") {
+          this.toolManager.setSize("eraser", parseInt(size));
+        }
       });
 
       // Set initial eraser size
-      this.toolManager.setSize("eraser", parseInt(eraserSize.value));
+      if (typeof this.toolManager.setSize === "function") {
+        try {
+          this.toolManager.setSize("eraser", parseInt(eraserSize.value));
+        } catch (err) {
+          console.warn("Failed to set initial eraser size:", err);
+        }
+      }
     }
 
-    if (eraserOpacity && eraserOpacityValue) {
+    if (eraserOpacity && eraserOpacityValue && this.toolManager) {
       eraserOpacity.addEventListener("input", (e) => {
         const opacity = e.target.value;
         eraserOpacityValue.textContent = opacity;
-        this.toolManager.setOpacity("eraser", parseInt(opacity) / 100);
+        if (typeof this.toolManager.setOpacity === "function") {
+          this.toolManager.setOpacity("eraser", parseInt(opacity) / 100);
+        }
       });
 
       // Set initial eraser opacity
-      this.toolManager.setOpacity(
-        "eraser",
-        parseInt(eraserOpacity.value) / 100
-      );
+      if (typeof this.toolManager.setOpacity === "function") {
+        try {
+          this.toolManager.setOpacity(
+            "eraser",
+            parseInt(eraserOpacity.value) / 100
+          );
+        } catch (err) {
+          console.warn("Failed to set initial eraser opacity:", err);
+        }
+      }
     }
   }
 
@@ -195,7 +262,7 @@ class UIManager {
     const resetCanvasBtn = document.getElementById("resetCanvasBtn");
 
     // Canvas size presets
-    if (canvasSizeOptions) {
+    if (canvasSizeOptions && this.canvasManager) {
       canvasSizeOptions.forEach((option) => {
         option.addEventListener("click", () => {
           canvasSizeOptions.forEach((o) => o.classList.remove("active"));
@@ -203,20 +270,24 @@ class UIManager {
 
           const width = parseInt(option.dataset.width);
           const height = parseInt(option.dataset.height);
-          this.canvasManager.resizeCanvas(width, height);
+          if (typeof this.canvasManager.resizeCanvas === "function") {
+            this.canvasManager.resizeCanvas(width, height);
+          }
         });
       });
     }
 
     // Custom canvas size
-    if (applyCustomSize && customWidth && customHeight) {
+    if (applyCustomSize && customWidth && customHeight && this.canvasManager) {
       applyCustomSize.addEventListener("click", () => {
         const width = parseInt(customWidth.value);
         const height = parseInt(customHeight.value);
 
         if (width >= 50 && width <= 4000 && height >= 50 && height <= 4000) {
           canvasSizeOptions.forEach((o) => o.classList.remove("active"));
-          this.canvasManager.resizeCanvas(width, height);
+          if (typeof this.canvasManager.resizeCanvas === "function") {
+            this.canvasManager.resizeCanvas(width, height);
+          }
         } else {
           alert("Please enter valid dimensions (50-4000px)");
         }
@@ -224,23 +295,27 @@ class UIManager {
     }
 
     // Clear canvas
-    if (clearCanvasBtn) {
+    if (clearCanvasBtn && this.canvasManager) {
       clearCanvasBtn.addEventListener("click", () => {
         if (confirm("Are you sure you want to clear the canvas?")) {
-          this.canvasManager.clearCanvas();
+          if (typeof this.canvasManager.clearCanvas === "function") {
+            this.canvasManager.clearCanvas();
+          }
         }
       });
     }
 
     // Reset all
-    if (resetCanvasBtn) {
+    if (resetCanvasBtn && this.canvasManager) {
       resetCanvasBtn.addEventListener("click", () => {
         if (
           confirm(
             "Are you sure you want to reset everything? This will clear all layers and settings."
           )
         ) {
-          this.canvasManager.resetAll();
+          if (typeof this.canvasManager.resetAll === "function") {
+            this.canvasManager.resetAll();
+          }
         }
       });
     }
@@ -300,12 +375,16 @@ class UIManager {
           item.classList.remove("active");
         });
         layerItem.classList.add("active");
-        this.toolManager.setActiveLayer(index);
+        if (typeof this.toolManager.setActiveLayer === "function") {
+          this.toolManager.setActiveLayer(index);
+        }
       });
 
       visibilityBtn.addEventListener("click", (e) => {
         e.stopPropagation(); // Prevent layer selection
-        this.toolManager.toggleLayerVisibility(index);
+        if (typeof this.toolManager.toggleLayerVisibility === "function") {
+          this.toolManager.toggleLayerVisibility(index);
+        }
       });
 
       // Assemble layer item

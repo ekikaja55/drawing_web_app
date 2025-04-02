@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   toolManager.setActiveTool("brush");
 
   // Initialize mobile UI handler
-  const mobileUI = new MobileUI(panelsManager, toolManager);
+  const mobileUI = new MobileUI(panelsManager);
 
   // Setup tool selection events
   document.querySelectorAll(".tool-btn").forEach((button) => {
