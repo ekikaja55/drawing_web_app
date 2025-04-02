@@ -7,16 +7,27 @@ class FillTool {
     this.color = "#000000";
     this.tolerance = 32; // Color difference tolerance (0-255)
 
-    // UI elements
+    // Don't set up event listeners in constructor
+    // We'll do this in the activate method instead
+  }
+
+  activate() {
+    // Set up UI elements when the tool is activated
     this.fillColorWheel = document.getElementById("fillColorWheel");
     this.fillHexInput = document.getElementById("fillHexInput");
     this.fillTolerance = document.getElementById("fillTolerance");
     this.fillToleranceValue = document.getElementById("fillToleranceValue");
 
-    this.setupEventListeners();
-  }
+    // Set up event listeners only if UI elements exist
+    if (
+      this.fillColorWheel &&
+      this.fillHexInput &&
+      this.fillTolerance &&
+      this.fillToleranceValue
+    ) {
+      this.setupEventListeners();
+    }
 
-  activate() {
     this.setupCanvasListeners();
   }
 
