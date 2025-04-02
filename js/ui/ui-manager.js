@@ -65,7 +65,7 @@ class UIManager {
     const colorWheel = document.getElementById("colorWheel");
     const hexInput = document.getElementById("hexInput");
 
-    if (colorWheel && hexInput) {
+    if (colorWheel && hexInput && this.toolManager) {
       // Update hex input when color wheel changes
       colorWheel.addEventListener("input", (e) => {
         const color = e.target.value;

@@ -4,12 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize the canvas manager
   const canvasManager = new CanvasManager();
 
-  // Initialize the UI manager
-  const uiManager = new UIManager();
+  // Initialize the tool manager FIRST
+  const toolManager = new ToolManager(canvasManager);
+
+  // THEN initialize the UI manager with required parameters
+  const uiManager = new UIManager(canvasManager, toolManager);
 
   // Initialize the layer manager
   const layerManager = new LayerManager(canvasManager);
-
   // Initialize panels manager
   const panelsManager = new PanelsManager();
 
@@ -18,9 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize canvas actions
   const canvasActions = new CanvasActions(canvasManager, layerManager);
-
-  // Initialize tool manager
-  const toolManager = new ToolManager(canvasManager);
 
   // Create and register tools
   const brushTool = new BrushTool(canvasManager);
