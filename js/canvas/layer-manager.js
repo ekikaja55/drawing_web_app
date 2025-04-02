@@ -7,6 +7,42 @@ class LayerManager {
     this.updateLayersList();
   }
 
+  // Add this method to get layers from the canvas manager
+  getLayers() {
+    return this.canvasManager.layers;
+  }
+
+  // Add this method to get the current layer index
+  getCurrentLayerIndex() {
+    return this.canvasManager.activeLayerIndex;
+  }
+
+  // Add this method to set the current layer
+  setCurrentLayer(index) {
+    this.canvasManager.setActiveLayer(index);
+  }
+
+  // Add this method to toggle layer visibility
+  toggleLayerVisibility(index) {
+    this.canvasManager.toggleLayerVisibility(index);
+  }
+
+  // Add these methods to match the ones called in app.js
+  addLayer() {
+    this.canvasManager.addLayer();
+    this.updateLayersList();
+  }
+
+  duplicateCurrentLayer() {
+    this.canvasManager.duplicateLayer(this.canvasManager.activeLayerIndex);
+    this.updateLayersList();
+  }
+
+  deleteCurrentLayer() {
+    this.canvasManager.deleteLayer(this.canvasManager.activeLayerIndex);
+    this.updateLayersList();
+  }
+
   updateLayersList() {
     // Clear the current list
     this.layersList.innerHTML = "";
@@ -88,20 +124,23 @@ class LayerManager {
     const duplicateLayerBtn = document.getElementById("duplicateLayerBtn");
     const deleteLayerBtn = document.getElementById("deleteLayerBtn");
 
-    addLayerBtn.addEventListener("click", () => {
-      this.canvasManager.addLayer();
-      this.updateLayersList();
-    });
+    if (addLayerBtn) {
+      addLayerBtn.addEventListener("click", () => {
+        this.addLayer();
+      });
+    }
 
-    duplicateLayerBtn.addEventListener("click", () => {
-      this.canvasManager.duplicateLayer(this.canvasManager.activeLayerIndex);
-      this.updateLayersList();
-    });
+    if (duplicateLayerBtn) {
+      duplicateLayerBtn.addEventListener("click", () => {
+        this.duplicateCurrentLayer();
+      });
+    }
 
-    deleteLayerBtn.addEventListener("click", () => {
-      this.canvasManager.deleteLayer(this.canvasManager.activeLayerIndex);
-      this.updateLayersList();
-    });
+    if (deleteLayerBtn) {
+      deleteLayerBtn.addEventListener("click", () => {
+        this.deleteCurrentLayer();
+      });
+    }
   }
 }
 
